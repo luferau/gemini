@@ -109,6 +109,10 @@
     <Compile Include="Inspectors\BitmapSourceEditorView.xaml.cs">
       <DependentUpon>BitmapSourceEditorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Inspectors\InspectorListEditorView.xaml.cs">
+      <DependentUpon>InspectorListEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Inspectors\InspectorListEditorViewModel.cs" />
     <Compile Include="Inspectors\ResetObjectValueAction.cs" />
     <Compile Include="Inspectors\ChangeObjectValueAction.cs" />
     <Compile Include="Inspectors\CheckBoxEditorView.xaml.cs">
@@ -200,6 +204,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Inspectors\EnumEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Inspectors\InspectorListEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
