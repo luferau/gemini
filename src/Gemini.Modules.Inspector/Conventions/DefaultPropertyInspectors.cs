@@ -28,6 +28,7 @@ namespace Gemini.Modules.Inspector.Conventions
                 new StandardPropertyEditorBuilder<double, TextBoxEditorViewModel<double>>(),
                 new StandardPropertyEditorBuilder<float, TextBoxEditorViewModel<float>>(),
                 new StandardPropertyEditorBuilder<int, TextBoxEditorViewModel<int>>(),
+                new StandardPropertyEditorBuilder<long, TextBoxEditorViewModel<long>>(),
                 new StandardPropertyEditorBuilder<double?, TextBoxEditorViewModel<double?>>(),
                 new StandardPropertyEditorBuilder<float?, TextBoxEditorViewModel<float?>>(),
                 new StandardPropertyEditorBuilder<int?, TextBoxEditorViewModel<int?>>(),
