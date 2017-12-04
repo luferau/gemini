@@ -109,6 +109,10 @@
     <Compile Include="Inspectors\BitmapSourceEditorView.xaml.cs">
       <DependentUpon>BitmapSourceEditorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Inspectors\FileInfoEditorView.xaml.cs">
+      <DependentUpon>FileInfoEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Inspectors\FileInfoEditorViewModel.cs" />
     <Compile Include="Inspectors\InspectorListEditorView.xaml.cs">
       <DependentUpon>InspectorListEditorView.xaml</DependentUpon>
     </Compile>
@@ -204,6 +208,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Inspectors\EnumEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Inspectors\FileInfoEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
