@@ -38,7 +38,7 @@ namespace Gemini.Modules.Inspector.Conventions
 
                 new StandardPropertyEditorBuilder<BitmapSource, BitmapSourceEditorViewModel>(),
                 new StandardPropertyEditorBuilder<InspectorList, InspectorListEditorViewModel>(),
-                new StandardPropertyEditorBuilder<FileInfo, FileInfoEditorViewModel>()
+                new StandardPropertyEditorBuilder<FilePath, FilePathEditorViewModel>()
             };
         }
 

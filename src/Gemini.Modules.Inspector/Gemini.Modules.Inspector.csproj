@@ -109,10 +109,10 @@
     <Compile Include="Inspectors\BitmapSourceEditorView.xaml.cs">
       <DependentUpon>BitmapSourceEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Inspectors\FileInfoEditorView.xaml.cs">
-      <DependentUpon>FileInfoEditorView.xaml</DependentUpon>
+    <Compile Include="Inspectors\FilePathEditorView.xaml.cs">
+      <DependentUpon>FilePathEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Inspectors\FileInfoEditorViewModel.cs" />
+    <Compile Include="Inspectors\FilePathEditorViewModel.cs" />
     <Compile Include="Inspectors\InspectorListEditorView.xaml.cs">
       <DependentUpon>InspectorListEditorView.xaml</DependentUpon>
     </Compile>
@@ -211,7 +211,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Inspectors\FileInfoEditorView.xaml">
+    <Page Include="Inspectors\FilePathEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
