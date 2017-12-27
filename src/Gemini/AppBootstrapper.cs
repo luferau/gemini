@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.ReflectionModel;
+using System.IO;
 using System.Linq;
 using Caliburn.Micro;
 using Gemini.Framework.Services;
@@ -119,7 +120,13 @@ namespace Gemini
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[] { Assembly.GetEntryAssembly() };
+            var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\DAShell\", @"\MissileElements\"));
+            var files = directory.GetFiles("*.dll", SearchOption.AllDirectories);
+            var assemblies = files.Where(f => f.Name.Contains("MissileElements")).Select(f => Assembly.LoadFile(f.FullName)).ToList();
+
+            assemblies.Add(Assembly.GetEntryAssembly());
+
+            return assemblies;
         }
 	}
 }
