@@ -33,7 +33,29 @@ namespace Gemini.Modules.MainWindow.ViewModels
             }
         }
 
-        private double _width = 1000.0;
+        private double _left;
+        public double Left
+        {
+            get { return _left; }
+            set
+            {
+                _left = value;
+                NotifyOfPropertyChange(() => Left);
+            }
+        }
+
+        private double _top;
+        public double Top
+        {
+            get { return _top; }
+            set
+            {
+                _top = value;
+                NotifyOfPropertyChange(() => Top);
+            }
+        }
+
+        private double _width;
         public double Width
         {
             get { return _width; }
@@ -44,7 +66,7 @@ namespace Gemini.Modules.MainWindow.ViewModels
             }
         }
 
-        private double _height = 800.0;
+        private double _height;
         public double Height
         {
             get { return _height; }
