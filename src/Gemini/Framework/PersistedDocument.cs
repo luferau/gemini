@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Gemini.Framework
 {
@@ -27,8 +29,28 @@ namespace Gemini.Framework
 
         public override void CanClose(System.Action<bool> callback)
         {
-            // TODO: Show save prompt.
-            callback(!IsDirty);
+            if (!IsDirty)
+            {
+                callback(true);
+                return;
+            }
+
+            var result = MessageBox.Show($"Document {FileName} has unsaved changes.\nDo you want to save changes before close?", "Confirm", MessageBoxButton.YesNoCancel);
+            switch (result)
+            {
+                case MessageBoxResult.Cancel:
+                    callback(false);
+                    break;
+                case MessageBoxResult.Yes:
+                    DoSave(FilePath);
+                    callback(true);
+                    break;
+                case MessageBoxResult.No:
+                    callback(true);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void UpdateDisplayName()
