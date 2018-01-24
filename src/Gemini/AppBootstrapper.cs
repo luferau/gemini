@@ -5,6 +5,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.ReflectionModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 using Caliburn.Micro;
 using Gemini.Framework.Services;
 
@@ -35,6 +36,13 @@ namespace Gemini
 
         protected virtual void PreInitialize()
         {
+            if (Properties.Settings.Default.UpdateSettings)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpdateSettings = false;
+                Properties.Settings.Default.Save();
+            }
+
             var code = Properties.Settings.Default.LanguageCode;
 
             if (!string.IsNullOrWhiteSpace(code))
