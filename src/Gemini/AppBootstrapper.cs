@@ -128,6 +128,7 @@ namespace Gemini
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
+            // TODO do so that assemblies are added from a specific folder (setting) or something like this
             var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\DAShell\", @"\MissileElements\"));
             var files = directory.GetFiles("*.dll", SearchOption.AllDirectories);
             var assemblies = files.Where(f => f.Name.Contains("MissileElements")).Select(f => Assembly.LoadFile(f.FullName)).ToList();

@@ -123,6 +123,8 @@ namespace Gemini.Modules.Inspector
         {
             foreach (var property in properties)
             {
+                if (property.DisplayName == "IsNotifying") continue;
+
                 var editor = DefaultPropertyInspectors.CreateEditor(property);
                 if (editor != null)
                 {
