@@ -27,11 +27,12 @@ namespace Gemini.Framework
             }
         }
 
-        public override void CanClose(System.Action<bool> callback)
+        public override void CanClose(Action<bool> callback)
         {
             if (!IsDirty)
             {
                 callback(true);
+                DoClose();
                 return;
             }
 
@@ -43,9 +44,11 @@ namespace Gemini.Framework
                     break;
                 case MessageBoxResult.Yes:
                     DoSave(FilePath);
+                    DoClose();
                     callback(true);
                     break;
                 case MessageBoxResult.No:
+                    DoClose();
                     callback(true);
                     break;
                 default:
@@ -61,15 +64,16 @@ namespace Gemini.Framework
         public async Task New(string fileName)
         {
             FileName = fileName;
+            FilePath = fileName;
             UpdateDisplayName();
 
             IsNew = true;
             IsDirty = false;
 
-            await DoNew();
+            await DoNew(fileName);
         }
 
-        protected abstract Task DoNew();
+        protected abstract Task DoNew(string fileName);
 
         public async Task Load(string filePath)
         {
@@ -98,5 +102,7 @@ namespace Gemini.Framework
         }
 
         protected abstract Task DoSave(string filePath);
+
+        protected abstract Task DoClose();
     }
 }
