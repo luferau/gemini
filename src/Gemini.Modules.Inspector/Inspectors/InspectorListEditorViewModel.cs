@@ -28,6 +28,8 @@ namespace Gemini.Modules.Inspector.Inspectors
                 NotifyOfPropertyChange(() => SelectedValue); 
             }
         }
+
+        public int Count => ListCollection.Count;
     }
 
     public class InspectorListEditorViewModel : EditorBase<InspectorList>, ILabelledInspector
