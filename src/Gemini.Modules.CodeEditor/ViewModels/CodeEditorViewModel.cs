@@ -52,7 +52,7 @@ namespace Gemini.Modules.CodeEditor.ViewModels
                 && string.Equals(FileName, other.FileName, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        protected override Task DoNew()
+        protected override Task DoNew(string fileName)
         {
             _originalText = string.Empty;
             ApplyOriginalText();
@@ -72,6 +72,11 @@ namespace Gemini.Modules.CodeEditor.ViewModels
             File.WriteAllText(filePath, newText);
             _originalText = newText;
             return TaskUtility.Completed;
+        }
+
+        protected override Task DoClose()
+        {
+            throw new NotImplementedException();
         }
 
         private void ApplyOriginalText()

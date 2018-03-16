@@ -47,6 +47,8 @@ namespace Gemini.Modules.Shell.Commands
             var tag = (NewFileTag) command.Tag;
             var editor = tag.EditorProvider.Create();
 
+            if (editor == null) return TaskUtility.Completed;
+
             var viewAware = (IViewAware)editor;
             viewAware.ViewAttached += (sender, e) =>
             {

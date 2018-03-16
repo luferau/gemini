@@ -14,7 +14,7 @@ namespace Gemini.Demo.Modules.TextEditor.ViewModels
         private EditorView _view;
 		private string _originalText;
 
-        protected override Task DoNew()
+        protected override Task DoNew(string fileName)
         {
             _originalText = string.Empty;
             ApplyOriginalText();
@@ -33,6 +33,11 @@ namespace Gemini.Demo.Modules.TextEditor.ViewModels
             var newText = _view.textBox.Text;
             File.WriteAllText(filePath, newText);
             _originalText = newText;
+            return TaskUtility.Completed;
+        }
+
+        protected override Task DoClose()
+        {
             return TaskUtility.Completed;
         }
 
