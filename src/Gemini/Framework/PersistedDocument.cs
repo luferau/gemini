@@ -36,7 +36,9 @@ namespace Gemini.Framework
                 return;
             }
 
-            var result = MessageBox.Show($"Document {FileName} has unsaved changes.\nDo you want to save changes before close?", "Confirm", MessageBoxButton.YesNoCancel);
+            var result = MessageBox.Show($"Document {FileName} has unsaved changes." +
+                                         $"{Environment.NewLine}Do you want to save changes before close?",
+                                         "Confirm", MessageBoxButton.YesNoCancel);
             switch (result)
             {
                 case MessageBoxResult.Cancel:
@@ -58,7 +60,7 @@ namespace Gemini.Framework
 
         private void UpdateDisplayName()
         {
-            DisplayName = (IsDirty) ? FileName + "*" : FileName;
+            DisplayName = IsDirty ? FileName + "*" : FileName;
         }
 
         public async Task New(string fileName)
