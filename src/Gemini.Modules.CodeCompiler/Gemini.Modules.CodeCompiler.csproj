@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gemini.Modules.CodeCompiler</RootNamespace>
     <AssemblyName>Gemini.Modules.CodeCompiler</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />
@@ -75,7 +75,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Gemini.Modules.CodeCompiler.nuspec">
       <SubType>Designer</SubType>
     </None>
@@ -87,11 +89,11 @@
       <Name>Gemini.Modules.ErrorList</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gemini.Modules.Output\Gemini.Modules.Output.csproj">
-      <Project>{B78AACC8-5A16-4951-83AD-B78D1C80A258}</Project>
+      <Project>{b78aacc8-5a16-4951-83ad-b78d1c80a258}</Project>
       <Name>Gemini.Modules.Output</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gemini\Gemini.csproj">
-      <Project>{13DBFC87-C152-4A86-94B0-D9944BEEF647}</Project>
+      <Project>{13dbfc87-c152-4a86-94b0-d9944beef647}</Project>
       <Name>Gemini</Name>
     </ProjectReference>
   </ItemGroup>
