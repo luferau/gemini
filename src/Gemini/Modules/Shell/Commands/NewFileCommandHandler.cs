@@ -58,7 +58,10 @@ namespace Gemini.Modules.Shell.Commands
                 loadedHandler = async (sender2, e2) =>
                 {
                     frameworkElement.Loaded -= loadedHandler;
-                    await tag.EditorProvider.New(editor, string.Format(Resources.FileNewUntitled, (_newFileCounter++) + tag.FileType.FileExtension));
+
+                    var name = string.Format(Resources.FileNewUntitled, (_newFileCounter++) + tag.FileType.FileExtension);
+
+                    await tag.EditorProvider.New(editor, name);
                 };
                 frameworkElement.Loaded += loadedHandler;
             };

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -61,10 +61,10 @@ namespace Gemini
 		{
             // Add all assemblies to AssemblySource (using a temporary DirectoryCatalog).
             var directoryCatalog = new DirectoryCatalog(@"./");
-            AssemblySource.Instance.AddRange(
-                directoryCatalog.Parts
-                    .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
-                    .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
+
+            AssemblySource.Instance.AddRange(directoryCatalog.Parts
+                .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
+                .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
 
             // Prioritise the executable assembly. This allows the client project to override exports, including IShell.
             // The client project can override SelectAssemblies to choose which assemblies are prioritised.
