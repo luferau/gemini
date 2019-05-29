@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using Gemini.Modules.Inspector.Inspectors;
+using Telerik.Windows.Controls.Map;
 
 namespace Gemini.Modules.Inspector.Conventions
 {
@@ -42,7 +43,8 @@ namespace Gemini.Modules.Inspector.Conventions
 
                 new StandardPropertyEditorBuilder<BitmapSource, BitmapSourceEditorViewModel>(),
                 new StandardPropertyEditorBuilder<InspectorList, InspectorListEditorViewModel>(),
-                new StandardPropertyEditorBuilder<FilePath, FilePathEditorViewModel>()
+                new StandardPropertyEditorBuilder<FilePath, FilePathEditorViewModel>(),
+                new StandardPropertyEditorBuilder<Location, LocationEditorViewModel>()
             };
         }
 

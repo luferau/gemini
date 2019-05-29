@@ -65,6 +65,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Windows.Controls.DataVisualization, Version=2018.2.515.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
     <Reference Include="WindowsBase" />
     <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\..\..\00082_DAShell\DAShell\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
@@ -110,6 +111,10 @@
       <DependentUpon>InspectorListEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Inspectors\InspectorListEditorViewModel.cs" />
+    <Compile Include="Inspectors\LocationEditorView.xaml.cs">
+      <DependentUpon>LocationEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Inspectors\LocationEditorViewModel.cs" />
     <Compile Include="Inspectors\ResetObjectValueAction.cs" />
     <Compile Include="Inspectors\ChangeObjectValueAction.cs" />
     <Compile Include="Inspectors\CheckBoxEditorView.xaml.cs">
@@ -209,6 +214,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Inspectors\InspectorListEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Inspectors\LocationEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
