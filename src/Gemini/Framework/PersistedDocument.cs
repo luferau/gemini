@@ -15,7 +15,7 @@ namespace Gemini.Framework
 
         public bool IsDirty
         {
-            get { return _isDirty; }
+            get => _isDirty;
             set
             {
                 if (value == _isDirty)

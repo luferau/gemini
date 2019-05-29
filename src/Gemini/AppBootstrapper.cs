@@ -5,7 +5,6 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.ReflectionModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using Caliburn.Micro;
 using Gemini.Framework.Services;
 

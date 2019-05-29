@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Numerics;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -30,6 +29,8 @@ namespace Gemini.Modules.Inspector.Conventions
                 new StandardPropertyEditorBuilder<double, TextBoxEditorViewModel<double>>(),
                 new StandardPropertyEditorBuilder<float, TextBoxEditorViewModel<float>>(),
                 new StandardPropertyEditorBuilder<int, TextBoxEditorViewModel<int>>(),
+                new StandardPropertyEditorBuilder<short, TextBoxEditorViewModel<short>>(),
+                new StandardPropertyEditorBuilder<ushort, TextBoxEditorViewModel<ushort>>(),
                 new StandardPropertyEditorBuilder<long, TextBoxEditorViewModel<long>>(),
                 new StandardPropertyEditorBuilder<double?, TextBoxEditorViewModel<double?>>(),
                 new StandardPropertyEditorBuilder<float?, TextBoxEditorViewModel<float?>>(),

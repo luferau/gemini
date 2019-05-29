@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,8 +22,7 @@ namespace Gemini.Modules.Toolbox.Views
 
         private void OnListBoxPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var listBoxItem = VisualTreeUtility.FindParent<ListBoxItem>(
-                (DependencyObject) e.OriginalSource);
+            var listBoxItem = VisualTreeUtility.FindParent<ListBoxItem>((DependencyObject) e.OriginalSource);
             _draggingItem = listBoxItem != null;
 
             _mouseStartPosition = e.GetPosition(ListBox);
@@ -42,14 +41,12 @@ namespace Gemini.Modules.Toolbox.Views
                 (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
-                var listBoxItem = VisualTreeUtility.FindParent<ListBoxItem>(
-                    (DependencyObject) e.OriginalSource);
+                var listBoxItem = VisualTreeUtility.FindParent<ListBoxItem>((DependencyObject) e.OriginalSource);
 
                 if (listBoxItem == null)
                     return;
 
-                var itemViewModel = (ToolboxItemViewModel) ListBox.ItemContainerGenerator.
-                    ItemFromContainer(listBoxItem);
+                var itemViewModel = (ToolboxItemViewModel) ListBox.ItemContainerGenerator.ItemFromContainer(listBoxItem);
 
                 var dragData = new DataObject(ToolboxDragDrop.DataFormat, itemViewModel.Model);
                 DragDrop.DoDragDrop(listBoxItem, dragData, DragDropEffects.Move);

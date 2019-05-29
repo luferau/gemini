@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Gemini.Modules.Output.Views
 {
@@ -33,5 +34,10 @@ namespace Gemini.Modules.Output.Views
 			outputText.Text = text;
 			ScrollToEnd();
 		}
-	}
+
+        private void ClearButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Clear();
+        }
+    }
 }
