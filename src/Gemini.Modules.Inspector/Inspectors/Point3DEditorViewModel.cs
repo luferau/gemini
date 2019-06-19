@@ -1,4 +1,4 @@
-﻿using System.Windows.Media.Media3D;
+using System.Windows.Media.Media3D;
 
 namespace Gemini.Modules.Inspector.Inspectors
 {
