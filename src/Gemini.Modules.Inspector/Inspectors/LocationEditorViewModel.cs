@@ -23,5 +23,15 @@ namespace Gemini.Modules.Inspector.Inspectors
                 NotifyOfPropertyChange(() => Longitude);
             }
         }
+
+        public override void NotifyOfPropertyChange(string propertyName)
+        {
+            if (propertyName == "Value")
+            {
+                NotifyOfPropertyChange(() => Latitude);
+                NotifyOfPropertyChange(() => Longitude);
+            }
+            base.NotifyOfPropertyChange(propertyName);
+        }
     }
 }
