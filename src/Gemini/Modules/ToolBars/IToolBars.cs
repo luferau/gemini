@@ -1,4 +1,4 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 
 namespace Gemini.Modules.ToolBars
 {
@@ -6,5 +6,6 @@ namespace Gemini.Modules.ToolBars
     {
         IObservableCollection<IToolBar> Items {get;}
         bool Visible { get; set; }
+
     }
 }

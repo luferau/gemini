@@ -34,10 +34,24 @@ namespace Gemini.Modules.Toolbox.Services
 
         public IEnumerable<ToolboxItem> GetToolboxItems(Type documentType)
         {
-            IEnumerable<ToolboxItem> result;
-            if (_toolboxItems.TryGetValue(documentType, out result))
-                return result;
-            return new List<ToolboxItem>();
+            var result = new List<ToolboxItem>();
+
+            // Get all toolbox items which are declared for interfaces that documentType implements
+            var interfaces = documentType.GetInterfaces();
+            foreach (var interfaceType in interfaces)
+            {
+                if (_toolboxItems.TryGetValue(interfaceType, out var interfaceToolboxItems))
+                {
+                    result.AddRange(interfaceToolboxItems);
+                }
+            }
+
+            if (_toolboxItems.TryGetValue(documentType, out var documentTypeToolboxItems))
+            {
+                result.AddRange(documentTypeToolboxItems);
+            }
+
+            return result;
         }
     }
 }

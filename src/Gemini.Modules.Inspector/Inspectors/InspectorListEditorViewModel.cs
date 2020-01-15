@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Caliburn.Micro;
 
@@ -10,7 +10,7 @@ namespace Gemini.Modules.Inspector.Inspectors
         [XmlIgnore]
         public ObservableCollection<string> ListCollection
         {
-            get { return _listCollection; }
+            get => _listCollection;
             set
             {
                 _listCollection = value;
@@ -21,7 +21,7 @@ namespace Gemini.Modules.Inspector.Inspectors
         private string _selectedValue;
         public string SelectedValue
         {
-            get { return _selectedValue; }
+            get => _selectedValue;
             set
             {
                 _selectedValue = value;
@@ -38,7 +38,7 @@ namespace Gemini.Modules.Inspector.Inspectors
 
         public string SelectedValue
         {
-            get { return Value.SelectedValue; }
+            get => Value.SelectedValue;
             set
             {
                 Value.SelectedValue = value;
