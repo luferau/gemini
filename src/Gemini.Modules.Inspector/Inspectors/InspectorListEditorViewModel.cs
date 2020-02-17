@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Xml.Serialization;
 using Caliburn.Micro;
 
@@ -26,6 +27,15 @@ namespace Gemini.Modules.Inspector.Inspectors
             {
                 _selectedValue = value;
                 NotifyOfPropertyChange(() => SelectedValue); 
+            }
+        }
+
+        public int SelectedValueAsInt
+        {
+            get
+            {
+                var result = int.TryParse(SelectedValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var selectedValuesAsInt);
+                return result ? selectedValuesAsInt : 0;
             }
         }
 
