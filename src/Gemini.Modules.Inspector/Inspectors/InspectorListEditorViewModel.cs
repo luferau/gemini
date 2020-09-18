@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Xml.Serialization;
 using Caliburn.Micro;
@@ -44,16 +45,6 @@ namespace Gemini.Modules.Inspector.Inspectors
 
     public class InspectorListEditorViewModel : EditorBase<InspectorList>, ILabelledInspector
     {
-        public ObservableCollection<string> ListCollection => Value.ListCollection;
 
-        public string SelectedValue
-        {
-            get => Value.SelectedValue;
-            set
-            {
-                Value.SelectedValue = value;
-                NotifyOfPropertyChange(() => SelectedValue);
-            }
-        }
     }
 }

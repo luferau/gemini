@@ -76,6 +76,8 @@
     <Compile Include="Controls\ConnectionDragEventArgs.cs" />
     <Compile Include="Controls\ConnectionDraggingEventArgs.cs" />
     <Compile Include="Controls\ConnectionDragStartedEventArgs.cs" />
+    <Compile Include="Controls\ConnectionItem.cs" />
+    <Compile Include="Controls\ConnectionItemsControl.cs" />
     <Compile Include="Controls\ConnectorItem.cs" />
     <Compile Include="Controls\ConnectorItemDragCompletedEventArgs.cs" />
     <Compile Include="Controls\ConnectorItemDraggingEventArgs.cs" />
