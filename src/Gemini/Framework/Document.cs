@@ -1,11 +1,10 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Gemini.Framework.Commands;
 using Gemini.Framework.Services;
-using Gemini.Framework.Threading;
 using Gemini.Framework.ToolBars;
 using Gemini.Modules.Shell.Commands;
 using Gemini.Modules.ToolBars;
@@ -24,12 +23,9 @@ namespace Gemini.Framework
         ICommandHandler<SaveFileAsCommandDefinition>
 	{
 	    private IUndoRedoManager _undoRedoManager;
-	    public IUndoRedoManager UndoRedoManager
-	    {
-            get { return _undoRedoManager ?? (_undoRedoManager = new UndoRedoManager()); }
-	    }
+	    public IUndoRedoManager UndoRedoManager => _undoRedoManager ?? (_undoRedoManager = new UndoRedoManager());
 
-		private ICommand _closeCommand;
+        private ICommand _closeCommand;
 		public override ICommand CloseCommand
 		{
 		    get { return _closeCommand ?? (_closeCommand = new RelayCommand(p => TryClose(null), p => true)); }
@@ -38,7 +34,7 @@ namespace Gemini.Framework
         private ToolBarDefinition _toolBarDefinition;
         public ToolBarDefinition ToolBarDefinition
         {
-            get { return _toolBarDefinition; }
+            get => _toolBarDefinition;
             protected set
             {
                 _toolBarDefinition = value;
@@ -70,21 +66,21 @@ namespace Gemini.Framework
             command.Enabled = UndoRedoManager.UndoStack.Any();
 	    }
 
-	    Task ICommandHandler<UndoCommandDefinition>.Run(Command command)
+	    Task<bool> ICommandHandler<UndoCommandDefinition>.Run(Command command)
 	    {
             UndoRedoManager.Undo(1);
-            return TaskUtility.Completed;
-	    }
+            return Task.FromResult(true);
+        }
 
         void ICommandHandler<RedoCommandDefinition>.Update(Command command)
         {
             command.Enabled = UndoRedoManager.RedoStack.Any();
         }
 
-        Task ICommandHandler<RedoCommandDefinition>.Run(Command command)
+        Task<bool> ICommandHandler<RedoCommandDefinition>.Run(Command command)
         {
             UndoRedoManager.Redo(1);
-            return TaskUtility.Completed;
+            return Task.FromResult(true);
         }
 
         void ICommandHandler<SaveFileCommandDefinition>.Update(Command command)
@@ -92,43 +88,50 @@ namespace Gemini.Framework
             command.Enabled = this is IPersistedDocument;
         }
 
-	    async Task ICommandHandler<SaveFileCommandDefinition>.Run(Command command)
+	    async Task<bool> ICommandHandler<SaveFileCommandDefinition>.Run(Command command)
 	    {
 	        var persistedDocument = this as IPersistedDocument;
 	        if (persistedDocument == null)
-	            return;
+	            return false;
 
 	        // If file has never been saved, show Save As dialog.
 	        if (persistedDocument.IsNew)
 	        {
 	            await DoSaveAs(persistedDocument);
-	            return;
-	        }
+                return true;
+            }
 
 	        // Save file.
             var filePath = persistedDocument.FilePath;
             await persistedDocument.Save(filePath);
-	    }
+
+            return true;
+        }
 
         void ICommandHandler<SaveFileAsCommandDefinition>.Update(Command command)
         {
             command.Enabled = this is IPersistedDocument;
         }
 
-	    async Task ICommandHandler<SaveFileAsCommandDefinition>.Run(Command command)
+	    async Task<bool> ICommandHandler<SaveFileAsCommandDefinition>.Run(Command command)
 	    {
             var persistedDocument = this as IPersistedDocument;
             if (persistedDocument == null)
-                return;
+                return false;
 
             await DoSaveAs(persistedDocument);
-	    }
+
+            return true;
+        }
 
 	    private static async Task DoSaveAs(IPersistedDocument persistedDocument)
 	    {
             // Show user dialog to choose filename.
-            var dialog = new SaveFileDialog();
-            dialog.FileName = persistedDocument.FileName;
+            var dialog = new SaveFileDialog
+            {
+                FileName = persistedDocument.FileName
+            };
+
             var filter = string.Empty;
 
             var fileExtension = Path.GetExtension(persistedDocument.FileName);

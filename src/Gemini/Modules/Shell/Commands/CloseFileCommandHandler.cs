@@ -2,7 +2,6 @@ using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using Gemini.Framework.Commands;
 using Gemini.Framework.Services;
-using Gemini.Framework.Threading;
 
 namespace Gemini.Modules.Shell.Commands
 {
@@ -23,10 +22,10 @@ namespace Gemini.Modules.Shell.Commands
             base.Update(command);
         }
 
-        public override Task Run(Command command)
+        public override Task<bool> Run(Command command)
         {
             _shell.CloseDocument(_shell.ActiveItem);
-            return TaskUtility.Completed;
+            return Task.FromResult(true);
         }
     }
 }

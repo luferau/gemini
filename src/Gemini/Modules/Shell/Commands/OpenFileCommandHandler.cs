@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,12 +23,14 @@ namespace Gemini.Modules.Shell.Commands
             _editorProviders = editorProviders;
         }
 
-        public override async Task Run(Command command)
+        public override async Task<bool> Run(Command command)
         {
-            var dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog
+            {
+                Filter = "All Supported Files|" + string.Join(";", _editorProviders
+                             .SelectMany(x => x.FileTypes).Select(x => "*" + x.FileExtension))
+            };
 
-            dialog.Filter = "All Supported Files|" + string.Join(";", _editorProviders
-                .SelectMany(x => x.FileTypes).Select(x => "*" + x.FileExtension));
 
             dialog.Filter += "|" + string.Join("|", _editorProviders
                 .SelectMany(x => x.FileTypes)
@@ -36,6 +38,8 @@ namespace Gemini.Modules.Shell.Commands
 
             if (dialog.ShowDialog() == true)
                 _shell.OpenDocument(await GetEditor(dialog.FileName));
+
+            return true;
         }
 
         internal static Task<IDocument> GetEditor(string path)

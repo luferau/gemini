@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Gemini.Framework.Commands
@@ -7,7 +7,7 @@ namespace Gemini.Framework.Commands
         where TCommandDefinition : CommandDefinition
     {
         void Update(Command command);
-        Task Run(Command command);
+        Task<bool> Run(Command command);
     }
 
     public interface ICommandListHandler<TCommandDefinition> : ICommandHandler
@@ -35,6 +35,6 @@ namespace Gemini.Framework.Commands
             
         }
 
-        public abstract Task Run(Command command);
+        public abstract Task<bool> Run(Command command);
     }
 }

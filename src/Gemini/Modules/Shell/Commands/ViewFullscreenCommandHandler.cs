@@ -1,23 +1,19 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using Gemini.Framework.Commands;
-using Gemini.Framework.Threading;
 
 namespace Gemini.Modules.Shell.Commands
 {
     [CommandHandler]
     public class ViewFullScreenCommandHandler : CommandHandlerBase<ViewFullScreenCommandDefinition>
     {
-        public override Task Run(Command command)
+        public override Task<bool> Run(Command command)
         {
             var window = Application.Current.MainWindow;
             if (window == null)
-                return TaskUtility.Completed;
-            if (window.WindowState != WindowState.Maximized)
-                window.WindowState = WindowState.Maximized;
-            else
-                window.WindowState = WindowState.Normal;
-            return TaskUtility.Completed;
+                return Task.FromResult(true);
+            window.WindowState = window.WindowState != WindowState.Maximized ? WindowState.Maximized : WindowState.Normal;
+            return Task.FromResult(true);
         }
     }
 }
