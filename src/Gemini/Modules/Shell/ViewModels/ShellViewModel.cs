@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -104,7 +104,13 @@ namespace Gemini.Modules.Shell.ViewModels
 
 	    public virtual string StateFile
 	    {
-	        get { return @".\ApplicationState.bin"; }
+            get
+            {
+                if (File.Exists(@".\ApplicationState.bin")) return @".\ApplicationState.bin";
+                if (File.Exists(@".\Software\ApplicationState.bin")) return @".\Software\ApplicationState.bin";
+
+                return @".\ApplicationState.bin";
+            }
 	    }
 
         public bool HasPersistedState
