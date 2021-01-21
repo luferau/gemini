@@ -8,25 +8,8 @@
     <Grid
         VerticalAlignment="Stretch"
         HorizontalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <StackPanel
-            Grid.Row="0"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right"
-            Margin="0 2 0 2">
-            <Button
-                x:Name="ClearButton"
-                Height="20"
-                Width="20"
-                Click="ClearButton_OnClick">
-                <Image Source="../Resources/clear.png"/>
-            </Button>
-        </StackPanel>
+
         <TextBox
-            Grid.Row="1"
             x:Name="outputText"
             Background="Transparent"
             Foreground="{DynamicResource EnvironmentToolWindowText}"
@@ -37,6 +20,18 @@
             FontFamily="Consolas"
             BorderThickness="0"
             ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+
+        <Button
+            x:Name="ClearButton"
+            Height="20"
+            Width="20"
+            Margin="0,0,20,0"
+            Click="ClearButton_OnClick"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top">
+            <Image Source="../Resources/clear.png"/>
+        </Button>
+
     </Grid>
 
 </UserControl>
