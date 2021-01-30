@@ -202,7 +202,7 @@
     <value>Стандарт</value>
   </data>
   <data name="ToolboxCategory" xml:space="preserve">
-    <value>Категория</value>
+    <value>Category</value>
   </data>
   <data name="ToolboxDisplayName" xml:space="preserve">
     <value>Панель инструментов</value>
