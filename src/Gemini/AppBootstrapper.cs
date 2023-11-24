@@ -22,10 +22,7 @@ namespace Gemini
 
 		protected CompositionContainer Container { get; set; }
 
-        internal IList<Assembly> PriorityAssemblies
-        {
-            get { return _priorityAssemblies; }
-        }
+        internal IList<Assembly> PriorityAssemblies => _priorityAssemblies;
 
         public AppBootstrapper()
         {
@@ -65,7 +62,7 @@ namespace Gemini
                 .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
                 .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
 
-            // Prioritise the executable assembly. This allows the client project to override exports, including IShell.
+            // Prioritize the executable assembly. This allows the client project to override exports, including IShell.
             // The client project can override SelectAssemblies to choose which assemblies are prioritised.
             _priorityAssemblies = SelectAssemblies().ToList();
 		    var priorityCatalog = new AggregateCatalog(_priorityAssemblies.Select(x => new AssemblyCatalog(x)));
@@ -106,7 +103,7 @@ namespace Gemini
 			if (exports.Any())
 				return exports.First().Value;
 
-			throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+			throw new Exception($"Could not locate any instances of contract {contract}.");
 		}
 
 		protected override IEnumerable<object> GetAllInstances(Type serviceType)
@@ -127,6 +124,9 @@ namespace Gemini
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
+            return new[] { Assembly.GetEntryAssembly() };
+
+            /*
             // TODO do so that assemblies are added from a specific folder (setting) or something like this
             var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory.Replace(@"\DAShell\", @"\MissileElements\"));
             var files = directory.GetFiles("*.dll", SearchOption.AllDirectories);
@@ -135,6 +135,7 @@ namespace Gemini
             assemblies.Add(Assembly.GetEntryAssembly());
 
             return assemblies;
+            */
         }
 	}
 }
