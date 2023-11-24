@@ -12,6 +12,8 @@ namespace Gemini.Modules.Shell.Views
     {
         public static void SaveLayout(DockingManager manager, Stream stream)
         {
+            manager.Layout.FloatingWindows.Clear();
+
             var layoutSerializer = new XmlLayoutSerializer(manager);
             layoutSerializer.Serialize(stream);
         }
