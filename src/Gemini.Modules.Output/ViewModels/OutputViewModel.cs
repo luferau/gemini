@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
@@ -34,7 +34,12 @@ namespace Gemini.Modules.Output.ViewModels
 			_writer = new OutputWriter(this);
 		}
 
-		public void Clear()
+        public void ClearButtonClicked()
+        {
+            Clear();
+        }
+        
+        public void Clear()
 		{
 			if (_view != null)
 				Execute.OnUIThread(() => _view.Clear());

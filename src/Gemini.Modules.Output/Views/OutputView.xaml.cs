@@ -34,10 +34,5 @@ namespace Gemini.Modules.Output.Views
 			outputText.Text = text;
 			ScrollToEnd();
 		}
-
-        private void ClearButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Clear();
-        }
     }
 }
