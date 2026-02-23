@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.ReflectionModel;
-using System.IO;
 using System.Linq;
 using Caliburn.Micro;
 using Gemini.Framework.Services;
@@ -34,7 +33,25 @@ namespace Gemini
         {
             if (Properties.Settings.Default.UpdateSettings)
             {
-                Properties.Settings.Default.Upgrade();
+                try
+                {
+                    Properties.Settings.Default.Upgrade();
+                }
+                catch (System.Configuration.ConfigurationErrorsException ex)
+                {
+                    // User settings file is corrupted — delete it and reset to defaults.
+                    var filename = ex.InnerException is System.Configuration.ConfigurationErrorsException innerEx
+                        ? innerEx.Filename
+                        : ((ex as System.Configuration.ConfigurationErrorsException)?.Filename);
+
+                    if (!string.IsNullOrEmpty(filename) && System.IO.File.Exists(filename))
+                    {
+                        System.IO.File.Delete(filename);
+                    }
+
+                    Properties.Settings.Default.Reload();
+                }
+
                 Properties.Settings.Default.UpdateSettings = false;
                 Properties.Settings.Default.Save();
             }
