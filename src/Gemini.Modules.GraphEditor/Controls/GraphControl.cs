@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Gemini.Modules.GraphEditor.Controls
 {
@@ -167,6 +171,8 @@ namespace Gemini.Modules.GraphEditor.Controls
             _elementItemsControl.SelectionChanged += OnElementItemsControlSelectChanged;
             _connectionItemsControl = ((ConnectionItemsControl) Template.FindName("PART_ConnectionItemsControl", this));
             _connectionItemsControl.SelectionChanged += OnConnectionsControlSelectionChanged;
+            _rubberBandCanvas = (Canvas) Template.FindName("PART_RubberBandCanvas", this);
+            _rubberBandRectangle = (Rectangle) Template.FindName("PART_RubberBandRectangle", this);
             base.OnApplyTemplate();
         }
 
@@ -182,11 +188,123 @@ namespace Gemini.Modules.GraphEditor.Controls
                 handler(this, new SelectionChangedEventArgs(Selector.SelectionChangedEvent, e.RemovedItems, e.AddedItems));
         }
 
+        #region Rubber band selection
+
+        private Canvas _rubberBandCanvas;
+        private Rectangle _rubberBandRectangle;
+        private Point _rubberBandOrigin;
+        private bool _isRubberBandActive;
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            _elementItemsControl.SelectedItems.Clear();
-            _connectionItemsControl.SelectedItems.Clear();
+            if (!Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                _elementItemsControl.SelectedItems.Clear();
+                _connectionItemsControl.SelectedItems.Clear();
+            }
+
+            // Start rubber band selection on empty canvas area
+            _rubberBandOrigin = e.GetPosition(this);
+            _isRubberBandActive = true;
+            CaptureMouse();
+
+            if (_rubberBandCanvas != null && _rubberBandRectangle != null)
+            {
+                Canvas.SetLeft(_rubberBandRectangle, _rubberBandOrigin.X);
+                Canvas.SetTop(_rubberBandRectangle, _rubberBandOrigin.Y);
+                _rubberBandRectangle.Width = 0;
+                _rubberBandRectangle.Height = 0;
+                _rubberBandRectangle.Visibility = Visibility.Visible;
+            }
+
+            e.Handled = true;
             base.OnMouseLeftButtonDown(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (_isRubberBandActive && _rubberBandCanvas != null && _rubberBandRectangle != null)
+            {
+                var currentPos = e.GetPosition(this);
+                var x = Math.Min(_rubberBandOrigin.X, currentPos.X);
+                var y = Math.Min(_rubberBandOrigin.Y, currentPos.Y);
+                var width = Math.Abs(currentPos.X - _rubberBandOrigin.X);
+                var height = Math.Abs(currentPos.Y - _rubberBandOrigin.Y);
+
+                Canvas.SetLeft(_rubberBandRectangle, x);
+                Canvas.SetTop(_rubberBandRectangle, y);
+                _rubberBandRectangle.Width = width;
+                _rubberBandRectangle.Height = height;
+
+                e.Handled = true;
+            }
+            base.OnMouseMove(e);
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            if (_isRubberBandActive)
+            {
+                _isRubberBandActive = false;
+                ReleaseMouseCapture();
+
+                if (_rubberBandRectangle != null)
+                {
+                    _rubberBandRectangle.Visibility = Visibility.Collapsed;
+
+                    // Hit-test: select all elements within the rubber band rectangle
+                    var rect = new Rect(
+                        Canvas.GetLeft(_rubberBandRectangle),
+                        Canvas.GetTop(_rubberBandRectangle),
+                        _rubberBandRectangle.Width,
+                        _rubberBandRectangle.Height);
+
+                    if (rect.Width > 2 && rect.Height > 2)
+                    {
+                        SelectElementsInRect(rect);
+                    }
+                }
+
+                e.Handled = true;
+            }
+            base.OnMouseLeftButtonUp(e);
+        }
+
+        private void SelectElementsInRect(Rect selectionRect)
+        {
+            bool addToSelection = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+
+            if (!addToSelection)
+                _elementItemsControl.SelectedItems.Clear();
+
+            foreach (var item in _elementItemsControl.Items)
+            {
+                var elementItem = (ElementItem)_elementItemsControl.ItemContainerGenerator.ContainerFromItem(item);
+                if (elementItem == null) continue;
+
+                var elementRect = new Rect(elementItem.X, elementItem.Y,
+                    elementItem.ActualWidth, elementItem.ActualHeight);
+
+                if (selectionRect.IntersectsWith(elementRect))
+                {
+                    elementItem.IsSelected = true;
+                }
+            }
+        }
+
+        #endregion
+
+        public IEnumerable<ElementItem> GetSelectedElementItems()
+        {
+            return _elementItemsControl.SelectedItems
+                .Cast<object>()
+                .Select(item => (ElementItem)_elementItemsControl.ItemContainerGenerator.ContainerFromItem(item))
+                .Where(item => item != null);
+        }
+
+        public ElementItem GetElementItemFromDataContext(object dataContext)
+        {
+            return (ElementItem)_elementItemsControl.ItemContainerGenerator.ContainerFromItem(dataContext);
         }
 
         internal int GetMaxZIndex()

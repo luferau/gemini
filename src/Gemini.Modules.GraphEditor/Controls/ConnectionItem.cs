@@ -21,7 +21,10 @@ namespace Gemini.Modules.GraphEditor.Controls
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            ParentGraphControl.UnselectAll();
+            if (!Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                ParentGraphControl.UnselectAll();
+            }
             base.OnMouseLeftButtonDown(e);
         }
     }

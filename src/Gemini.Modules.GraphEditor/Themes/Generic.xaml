@@ -71,6 +71,16 @@
 										</ControlTemplate>
 									</ListBox.Template>
 								</local:ElementItemsControl>
+
+								<!-- Rubber band selection overlay -->
+								<Canvas x:Name="PART_RubberBandCanvas" IsHitTestVisible="False">
+									<Rectangle x:Name="PART_RubberBandRectangle"
+											   Visibility="Collapsed"
+											   Stroke="#FF5078D0"
+											   StrokeThickness="1"
+											   StrokeDashArray="3 1"
+											   Fill="#205078D0" />
+								</Canvas>
 							</Grid>
 						</Border>
 					</Border>

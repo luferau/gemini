@@ -86,19 +86,42 @@ namespace Gemini.Modules.GraphEditor.Controls
             if (parentGraphControl == null)
                 return;
 
-            parentGraphControl.SelectedElements.Clear();
-            IsSelected = true;
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                // Ctrl+Click: toggle selection
+                IsSelected = !IsSelected;
+            }
+            else if (!IsSelected)
+            {
+                // Click on unselected without Ctrl: clear others, select this
+                parentGraphControl.SelectedElements.Clear();
+                IsSelected = true;
+            }
+            // Click on already-selected without Ctrl: do nothing (allows group drag start)
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (_isDragging)
             {
-                var newMousePosition = e.GetPosition(ParentGraphControl);
+                var parentGraphControl = ParentGraphControl;
+                var newMousePosition = e.GetPosition(parentGraphControl);
                 var delta = newMousePosition - _lastMousePosition;
 
-                X += delta.X;
-                Y += delta.Y;
+                // Move all selected elements together
+                if (parentGraphControl != null)
+                {
+                    foreach (var item in parentGraphControl.GetSelectedElementItems())
+                    {
+                        item.X += delta.X;
+                        item.Y += delta.Y;
+                    }
+                }
+                else
+                {
+                    X += delta.X;
+                    Y += delta.Y;
+                }
 
                 _lastMousePosition = newMousePosition;
             }
