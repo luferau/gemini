@@ -322,11 +322,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\..\..\00082_DAShell\DAShell\packages\Gu.Localization.Analyzers.6.4.3.0\analyzers\dotnet\cs\Gu.Localization.Analyzers.dll" />
-    <Analyzer Include="..\..\..\00082_DAShell\DAShell\packages\Gu.Localization.Analyzers.6.4.3.0\analyzers\dotnet\cs\Gu.Roslyn.AnalyzerExtensions.dll" />
-    <Analyzer Include="..\..\..\00082_DAShell\DAShell\packages\Gu.Localization.Analyzers.6.4.3.0\analyzers\dotnet\cs\Gu.Roslyn.CodeFixExtensions.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

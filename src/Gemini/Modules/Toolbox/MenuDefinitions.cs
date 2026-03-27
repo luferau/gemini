@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using Gemini.Framework.Menus;
 using Gemini.Modules.Toolbox.Commands;
 
