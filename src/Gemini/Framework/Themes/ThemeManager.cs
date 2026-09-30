@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Original source code from the Wide framework:
  * https://github.com/chandramouleswaran/Wide
  * 
@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using Gemini.Framework.Services;
@@ -28,6 +29,12 @@ namespace Gemini.Framework.Themes
     public class ThemeManager : IThemeManager
     {
         public event EventHandler CurrentThemeChanged;
+
+        /// <summary>
+        /// Raised for every theme resource dictionary that could not be loaded, so a host
+        /// application can record it next to the rest of its startup diagnostics.
+        /// </summary>
+        public event EventHandler<ThemeResourceFailureEventArgs> ResourceLoadFailed;
 
         private readonly SettingsPropertyChangedEventManager<Properties.Settings> _settingsEventManager =
             new SettingsPropertyChangedEventManager<Properties.Settings>(Properties.Settings.Default);
@@ -72,24 +79,48 @@ namespace Gemini.Framework.Themes
             windowResourceDictionary.BeginInit();
             windowResourceDictionary.MergedDictionaries.Clear();
 
+            var loadedAny = false;
+
             foreach (var uri in theme.ApplicationResources)
-                _applicationResourceDictionary.MergedDictionaries.Add(new ResourceDictionary
-                {
-                    Source = uri
-                });
+                loadedAny |= TryAddResourceDictionary(_applicationResourceDictionary, uri);
 
             foreach (var uri in theme.MainWindowResources)
-                windowResourceDictionary.MergedDictionaries.Add(new ResourceDictionary
-                {
-                    Source = uri
-                });
+                loadedAny |= TryAddResourceDictionary(windowResourceDictionary, uri);
 
             _applicationResourceDictionary.EndInit();
             windowResourceDictionary.EndInit();
 
             RaiseCurrentThemeChanged(EventArgs.Empty);
 
-            return true;
+            return loadedAny;
+        }
+
+        /// <summary>
+        /// Merges one dictionary and reports the ones that cannot load. A theme pulls dictionaries
+        /// from other assemblies by pack:// URI, so a single missing or version-mismatched assembly
+        /// would otherwise abort theme application - and with it the shell's OnViewLoaded.
+        /// </summary>
+        private bool TryAddResourceDictionary(ResourceDictionary target, Uri uri)
+        {
+            try
+            {
+                target.MergedDictionaries.Add(new ResourceDictionary { Source = uri });
+                return true;
+            }
+            catch (Exception error)
+            {
+                ReportResourceFailure(uri, error);
+                return false;
+            }
+        }
+
+        private void ReportResourceFailure(Uri uri, Exception error)
+        {
+            Trace.WriteLine("Theme resource could not be loaded: " + uri + " (" + error.GetType().Name + ": " + error.Message + ")");
+
+            var handler = ResourceLoadFailed;
+            if (handler != null)
+                handler(this, new ThemeResourceFailureEventArgs(uri, error));
         }
 
         private void RaiseCurrentThemeChanged(EventArgs args)

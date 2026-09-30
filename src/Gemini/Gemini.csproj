@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -165,6 +165,9 @@
     <Compile Include="Framework\Commands\ICommandUiItem.cs" />
     <Compile Include="Framework\Commands\TargetableCommand.cs" />
     <Compile Include="Framework\Commands\ICommandRouter.cs" />
+    <Compile Include="Framework\Composition\ModuleAssemblyScanner.cs" />
+    <Compile Include="Framework\Composition\ScanFailure.cs" />
+    <Compile Include="Framework\Composition\ScannedModuleAssembly.cs" />
     <Compile Include="Framework\Controls\ClippingHwndHost.cs" />
     <Compile Include="Framework\Controls\ExpanderEx.cs" />
     <Compile Include="Framework\Controls\HwndWrapper.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="Framework\Themes\IThemeManager.cs" />
     <Compile Include="Framework\Themes\BlueTheme.cs" />
     <Compile Include="Framework\Themes\ThemeManager.cs" />
+    <Compile Include="Framework\Themes\ThemeResourceFailureEventArgs.cs" />
     <Compile Include="Framework\Threading\TaskUtility.cs" />
     <Compile Include="Framework\ToolBars\CommandToolBarItemDefinition.cs" />
     <Compile Include="Framework\ToolBars\ExcludeToolBarDefinition.cs" />

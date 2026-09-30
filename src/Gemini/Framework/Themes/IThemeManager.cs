@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Original source code from the Wide framework:
  * https://github.com/chandramouleswaran/Wide
  * 
@@ -23,6 +23,9 @@ namespace Gemini.Framework.Themes
     public interface IThemeManager
     {
         event EventHandler CurrentThemeChanged;
+
+        /// <summary>Raised for every theme resource dictionary that could not be loaded.</summary>
+        event EventHandler<ThemeResourceFailureEventArgs> ResourceLoadFailed;
 
         List<ITheme> Themes { get; }
         ITheme CurrentTheme { get; }

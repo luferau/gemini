@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.ReflectionModel;
+using System.ComponentModel.Composition.Primitives;
+using System.Diagnostics;
 using System.Linq;
 using Caliburn.Micro;
+using Gemini.Framework.Composition;
 using Gemini.Framework.Services;
 
 namespace Gemini
@@ -18,6 +20,8 @@ namespace Gemini
     public class AppBootstrapper : BootstrapperBase
     {
         private List<Assembly> _priorityAssemblies;
+        private ModuleAssemblyScanner _scanner;
+        private IReadOnlyList<ScannedModuleAssembly> _scannedAssemblies;
 
 		protected CompositionContainer Container { get; set; }
 
@@ -72,24 +76,29 @@ namespace Gemini
 		/// </summary>
 		protected override void Configure()
 		{
-            // Add all assemblies to AssemblySource (using a temporary DirectoryCatalog).
-            var directoryCatalog = new DirectoryCatalog(@"./");
+            // Discover the modules in the application folder. This replaces a bare
+            // new DirectoryCatalog("./") scan: enumerating its Parts made MEF call
+            // Assembly.GetTypes() on every DLL, and one assembly whose dependency resolved to
+            // the wrong version then threw ReflectionTypeLoadException out of this constructor,
+            // i.e. out of App.xaml parsing, before any window or handler existed.
+            _scanner = new ModuleAssemblyScanner(AppDomain.CurrentDomain.BaseDirectory, ReportScanFailure);
+            _scannedAssemblies = _scanner.Scan();
 
-            AssemblySource.Instance.AddRange(directoryCatalog.Parts
-                .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
+            AssemblySource.Instance.AddRange(_scannedAssemblies
+                .Select(scanned => scanned.Assembly)
                 .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
 
             // Prioritize the executable assembly. This allows the client project to override exports, including IShell.
             // The client project can override SelectAssemblies to choose which assemblies are prioritised.
-            _priorityAssemblies = SelectAssemblies().ToList();
-		    var priorityCatalog = new AggregateCatalog(_priorityAssemblies.Select(x => new AssemblyCatalog(x)));
+            _priorityAssemblies = SelectAssemblies().Where(assembly => assembly != null).ToList();
+		    var priorityCatalog = new AggregateCatalog(_priorityAssemblies.Select(CatalogFor));
 		    var priorityProvider = new CatalogExportProvider(priorityCatalog);
             
             // Now get all other assemblies (excluding the priority assemblies).
 			var mainCatalog = new AggregateCatalog(
                 AssemblySource.Instance
                     .Where(assembly => !_priorityAssemblies.Contains(assembly))
-                    .Select(x => new AssemblyCatalog(x)));
+                    .Select(CatalogFor));
 		    var mainProvider = new CatalogExportProvider(mainCatalog);
 
 			Container = new CompositionContainer(priorityProvider, mainProvider);
@@ -102,7 +111,76 @@ namespace Gemini
             batch.AddExportedValue(mainCatalog);
 
 			Container.Compose(batch);
+
+            ValidateRequiredExports();
 		}
+
+        /// <summary>
+        /// Catalog for one assembly: the pair discovery already accepted, or a probe of the
+        /// assembly itself (the priority assembly is the entry assembly and need not be in the folder).
+        /// </summary>
+        private ComposablePartCatalog CatalogFor(Assembly assembly)
+        {
+            var scanned = _scannedAssemblies.FirstOrDefault(candidate => candidate.Assembly == assembly);
+            if (scanned != null)
+                return scanned.Catalog;
+
+            ComposablePartCatalog catalog;
+            if (_scanner.TryCreateCatalog(assembly, out catalog))
+                return catalog;
+
+            OnStartupFailed(new InvalidOperationException(
+                "The entry assembly could not be loaded: " + (assembly == null ? "(none)" : assembly.FullName)));
+
+            return new TypeCatalog(new List<Type>());
+        }
+
+        /// <summary>
+        /// The shell cannot run without these contracts, so a deployment that cannot supply them
+        /// fails with a report instead of an opaque composition error later.
+        /// </summary>
+        private void ValidateRequiredExports()
+        {
+            var missing = new List<string>();
+
+            if (!HasExport(typeof(IMainWindow)))
+                missing.Add(typeof(IMainWindow).FullName);
+
+            if (!HasExport(typeof(IShell)))
+                missing.Add(typeof(IShell).FullName);
+
+            if (missing.Count > 0)
+                OnStartupFailed(new InvalidOperationException(
+                    "These required modules are not available: " + string.Join(", ", missing)));
+        }
+
+        /// <summary>Asks the container whether a contract has an export, without creating one.</summary>
+        private bool HasExport(Type contractType)
+        {
+            try
+            {
+                return Container.GetExports<object>(AttributedModelServices.GetContractName(contractType)).Any();
+            }
+            catch (ImportCardinalityMismatchException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>Called once per assembly that module discovery could not use.</summary>
+        protected virtual void ReportScanFailure(ScanFailure failure)
+        {
+            Trace.WriteLine(failure.ToString());
+        }
+
+        /// <summary>
+        /// Called when the application cannot start. The default writes to the trace listeners;
+        /// a host application overrides this to write its own log and tell the operator.
+        /// </summary>
+        protected virtual void OnStartupFailed(Exception error)
+        {
+            Trace.WriteLine("Startup failed: " + error);
+        }
 
 	    protected virtual void BindServices(CompositionBatch batch)
         {
@@ -135,8 +213,15 @@ namespace Gemini
 
 	    protected override void OnStartup(object sender, StartupEventArgs e)
 	    {
+            try
+            {
 	        base.OnStartup(sender, e);
-            DisplayRootViewFor<IMainWindow>();
+                DisplayRootViewFor<IMainWindow>();
+            }
+            catch (Exception error)
+            {
+                OnStartupFailed(error);
+            }
 	    }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
