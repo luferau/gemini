@@ -88,8 +88,27 @@ namespace Gemini.Framework.Composition
                 }
                 catch (Exception error)
                 {
-                    Report(name.FullName, error);
-                    continue;
+                    if (!new ScanFailure(name.FullName, error).IsLocationBlocked)
+                    {
+                        Report(name.FullName, error);
+                        continue;
+                    }
+
+                    // The name carries a CodeBase, which makes Assembly.Load a *file* load, and the
+                    // loader refuses a file that Windows marks as downloaded (Mark-of-the-Web) or that
+                    // lives in a remote location. Identity probing from the application base is not
+                    // subject to that rule - it is how the entry assembly's own dependencies load - so
+                    // retry by identity before giving up on the assembly.
+                    try
+                    {
+                        name.CodeBase = null;
+                        assembly = Assembly.Load(name);
+                    }
+                    catch (Exception retryError)
+                    {
+                        Report(name.FullName, retryError);
+                        continue;
+                    }
                 }
 
                 ComposablePartCatalog catalog;

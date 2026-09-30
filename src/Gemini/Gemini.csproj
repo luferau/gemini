@@ -167,6 +167,7 @@
     <Compile Include="Framework\Commands\ICommandRouter.cs" />
     <Compile Include="Framework\Composition\ModuleAssemblyScanner.cs" />
     <Compile Include="Framework\Composition\ScanFailure.cs" />
+    <Compile Include="Framework\Composition\ScanFailureSummary.cs" />
     <Compile Include="Framework\Composition\ScannedModuleAssembly.cs" />
     <Compile Include="Framework\Controls\ClippingHwndHost.cs" />
     <Compile Include="Framework\Controls\ExpanderEx.cs" />

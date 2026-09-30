@@ -20,6 +20,35 @@ namespace Gemini.Framework.Composition
 
         public Exception Error { get; }
 
+        /// <summary>
+        /// True when the loader refused the file itself rather than one of its dependencies: the
+        /// signature is HResult 0x80131515 with a NotSupportedException in the chain. That is what a
+        /// file Windows marks as downloaded (Mark-of-the-Web) or a remote location produces, and it is
+        /// worth naming separately because the remedy is a deployment one, not a missing dependency.
+        /// </summary>
+        public bool IsLocationBlocked
+        {
+            get
+            {
+                var current = Error;
+                var depth = 0;
+
+                while (current != null && depth < 8)
+                {
+                    if (current.HResult == LoadFromRemoteSourcesHResult &&
+                        (current is NotSupportedException || current.InnerException is NotSupportedException))
+                        return true;
+
+                    current = current.InnerException;
+                    depth++;
+                }
+
+                return false;
+            }
+        }
+
+        private const int LoadFromRemoteSourcesHResult = unchecked((int)0x80131515);
+
         public override string ToString()
         {
             return Source + ": " + (Error == null ? "(no error reported)" : Error.GetType().Name + ": " + Error.Message);

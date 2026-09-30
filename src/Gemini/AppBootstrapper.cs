@@ -22,6 +22,7 @@ namespace Gemini
         private List<Assembly> _priorityAssemblies;
         private ModuleAssemblyScanner _scanner;
         private IReadOnlyList<ScannedModuleAssembly> _scannedAssemblies;
+        private List<ScanFailure> _scanFailures;
 
 		protected CompositionContainer Container { get; set; }
 
@@ -81,7 +82,12 @@ namespace Gemini
             // Assembly.GetTypes() on every DLL, and one assembly whose dependency resolved to
             // the wrong version then threw ReflectionTypeLoadException out of this constructor,
             // i.e. out of App.xaml parsing, before any window or handler existed.
-            _scanner = new ModuleAssemblyScanner(AppDomain.CurrentDomain.BaseDirectory, ReportScanFailure);
+            _scanFailures = new List<ScanFailure>();
+            _scanner = new ModuleAssemblyScanner(AppDomain.CurrentDomain.BaseDirectory, failure =>
+            {
+                _scanFailures.Add(failure);
+                ReportScanFailure(failure);
+            });
             _scannedAssemblies = _scanner.Scan();
 
             AssemblySource.Instance.AddRange(_scannedAssemblies
@@ -113,7 +119,22 @@ namespace Gemini
 			Container.Compose(batch);
 
             ValidateRequiredExports();
+
+            OnScanCompleted(_scanFailures);
 		}
+
+        /// <summary>
+        /// Called once, after discovery finished and the container is composed. A host application
+        /// overrides this to record and report what discovery had to skip; the default writes the
+        /// grouped summary to the trace listeners.
+        /// </summary>
+        protected virtual void OnScanCompleted(IReadOnlyList<ScanFailure> failures)
+        {
+            if (failures == null || failures.Count == 0)
+                return;
+
+            Trace.WriteLine(new ScanFailureSummary(failures).DescribeSummary());
+        }
 
         /// <summary>
         /// Catalog for one assembly: the pair discovery already accepted, or a probe of the
