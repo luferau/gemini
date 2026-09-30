@@ -28,6 +28,15 @@ namespace Gemini
 
         internal IList<Assembly> PriorityAssemblies => _priorityAssemblies;
 
+        /// <summary>
+        /// The assemblies discovery accepted, with the catalogs built for them. A host application can
+        /// count what a deployment offers (exports) without reflecting over the assemblies again.
+        /// </summary>
+        protected IReadOnlyList<ScannedModuleAssembly> ScannedAssemblies
+        {
+            get { return _scannedAssemblies ?? new List<ScannedModuleAssembly>(); }
+        }
+
         public AppBootstrapper()
         {
             this.PreInitialize();
@@ -197,6 +206,10 @@ namespace Gemini
         /// <summary>
         /// Called when the application cannot start. The default writes to the trace listeners;
         /// a host application overrides this to write its own log and tell the operator.
+        /// Note for hosts: this is reached from the entry-assembly probe and the required-export check
+        /// inside <see cref="Configure"/>, and from the wrapped <see cref="OnStartup"/> - so an override
+        /// that exits the process makes every startup failure fatal, where it previously reached the
+        /// dispatcher's unhandled-exception handler.
         /// </summary>
         protected virtual void OnStartupFailed(Exception error)
         {

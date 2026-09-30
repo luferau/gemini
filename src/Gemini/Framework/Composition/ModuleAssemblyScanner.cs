@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
@@ -103,6 +103,17 @@ namespace Gemini.Framework.Composition
                     {
                         name.CodeBase = null;
                         assembly = Assembly.Load(name);
+
+                        // Identity probing consults the GAC before the application base, so a
+                        // same-identity assembly installed there would silently be used instead of the
+                        // deployed file. Say so, because that is a substitution nobody would notice.
+                        if (!IsInApplicationBase(assembly))
+                        {
+                            Report(name.FullName, new InvalidOperationException(
+                                "the blocked file was not used; the assembly was loaded from " +
+                                (string.IsNullOrEmpty(assembly.Location) ? "(an unknown location)" : assembly.Location) +
+                                " instead of the application folder"));
+                        }
                     }
                     catch (Exception retryError)
                     {
@@ -163,6 +174,22 @@ namespace Gemini.Framework.Composition
         {
             if (_reportFailure != null)
                 _reportFailure(new ScanFailure(source, error));
+        }
+
+        private static bool IsInApplicationBase(Assembly assembly)
+        {
+            try
+            {
+                var location = assembly.Location;
+                if (string.IsNullOrEmpty(location))
+                    return false;
+
+                return location.StartsWith(AppDomain.CurrentDomain.BaseDirectory, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
