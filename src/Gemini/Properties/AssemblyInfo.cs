@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Markup;
@@ -31,3 +32,8 @@ using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("http://schemas.timjones.tw/gemini", "Gemini")]
 [assembly: XmlnsDefinition("http://schemas.timjones.tw/gemini", "Gemini.Framework.Controls")]
+
+// Gemini.Properties.Settings is internal, and the Shell has to read and write it to carry an operator's
+// theme, language and menu state over from a previously installed version - the framework's own Upgrade()
+// only ever looks inside one install folder, and a release that ships in a folder of its own is a new one.
+[assembly: InternalsVisibleTo("Shell")]
