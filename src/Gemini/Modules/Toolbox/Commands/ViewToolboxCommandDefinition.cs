@@ -3,7 +3,9 @@ using Gemini.Properties;
 
 namespace Gemini.Modules.Toolbox.Commands
 {
+#if MODULE_TOOLBOX
     [CommandDefinition]
+#endif
     public class ViewToolboxCommandDefinition : CommandDefinition
     {
         public const string CommandName = "View.Toolbox";

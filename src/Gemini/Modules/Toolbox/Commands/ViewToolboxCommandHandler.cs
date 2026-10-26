@@ -5,7 +5,9 @@ using Gemini.Framework.Services;
 
 namespace Gemini.Modules.Toolbox.Commands
 {
+#if MODULE_TOOLBOX
     [CommandHandler]
+#endif
     public class ViewToolboxCommandHandler : CommandHandlerBase<ViewToolboxCommandDefinition>
     {
         private readonly IShell _shell;

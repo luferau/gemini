@@ -3,7 +3,9 @@ using Gemini.Modules.Inspector.Properties;
 
 namespace Gemini.Modules.Inspector.Commands
 {
+#if MODULE_INSPECTOR
     [CommandDefinition]
+#endif
     public class ViewInspectorCommandDefinition : CommandDefinition
     {
         public const string CommandName = "View.Inspector";

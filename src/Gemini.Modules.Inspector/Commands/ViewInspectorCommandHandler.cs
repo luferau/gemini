@@ -5,7 +5,9 @@ using Gemini.Framework.Services;
 
 namespace Gemini.Modules.Inspector.Commands
 {
+#if MODULE_INSPECTOR
     [CommandHandler]
+#endif
     public class ViewInspectorCommandHandler : CommandHandlerBase<ViewInspectorCommandDefinition>
     {
         private readonly IShell _shell;

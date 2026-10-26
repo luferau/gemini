@@ -3,7 +3,9 @@ using Gemini.Properties;
 
 namespace Gemini.Modules.UndoRedo.Commands
 {
+#if MODULE_HISTORY
     [CommandDefinition]
+#endif
     public class ViewHistoryCommandDefinition : CommandDefinition
     {
         public const string CommandName = "View.History";

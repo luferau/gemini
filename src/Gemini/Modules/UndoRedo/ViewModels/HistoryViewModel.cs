@@ -9,7 +9,9 @@ using Gemini.Properties;
 
 namespace Gemini.Modules.UndoRedo.ViewModels
 {
+#if MODULE_HISTORY
     [Export(typeof(IHistoryTool))]
+#endif
     public class HistoryViewModel : Tool, IHistoryTool
     {
         private readonly BindableCollection<HistoryItemViewModel> _historyItems;

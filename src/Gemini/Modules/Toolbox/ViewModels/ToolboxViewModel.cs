@@ -12,7 +12,9 @@ using Gemini.Properties;
 
 namespace Gemini.Modules.Toolbox.ViewModels
 {
+#if MODULE_TOOLBOX
     [Export(typeof(IToolbox))]
+#endif
     public class ToolboxViewModel : Tool, IToolbox
     {
         private readonly IToolboxService _toolboxService;

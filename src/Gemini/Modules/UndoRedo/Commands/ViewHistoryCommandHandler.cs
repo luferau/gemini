@@ -5,7 +5,9 @@ using Gemini.Framework.Services;
 
 namespace Gemini.Modules.UndoRedo.Commands
 {
+#if MODULE_HISTORY
     [CommandHandler]
+#endif
     public class ViewHistoryCommandHandler : CommandHandlerBase<ViewHistoryCommandDefinition>
     {
         private readonly IShell _shell;

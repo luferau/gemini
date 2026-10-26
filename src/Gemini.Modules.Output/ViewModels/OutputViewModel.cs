@@ -10,7 +10,9 @@ using Gemini.Modules.Output.Properties;
 
 namespace Gemini.Modules.Output.ViewModels
 {
+#if MODULE_OUTPUT
 	[Export(typeof(IOutput))]
+#endif
 	public class OutputViewModel : Tool, IOutput
 	{
         private readonly StringBuilder _stringBuilder;

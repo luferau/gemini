@@ -7,7 +7,9 @@ using Gemini.Modules.Inspector.Properties;
 
 namespace Gemini.Modules.Inspector.ViewModels
 {
+#if MODULE_INSPECTOR
     [Export(typeof(IInspectorTool))]
+#endif
     public class InspectorViewModel : Tool, IInspectorTool
     {
         public event EventHandler SelectedObjectChanged;

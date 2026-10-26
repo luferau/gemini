@@ -5,7 +5,9 @@ using Gemini.Framework.Services;
 
 namespace Gemini.Modules.Output.Commands
 {
+#if MODULE_OUTPUT
     [CommandHandler]
+#endif
     public class ViewOutputCommandHandler : CommandHandlerBase<ViewOutputCommandDefinition>
     {
         private readonly IShell _shell;
